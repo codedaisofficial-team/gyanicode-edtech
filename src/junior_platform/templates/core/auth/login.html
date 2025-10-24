@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | GyaniCode</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+      background-color: #000000;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #000000;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 850px;
+      height: 95vh;
+      max-height: 800px;
+      display: flex;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      background: #1e293b;
+    }
+
+    /* Left Panel - Desktop Only */
+    .login-left {
+      flex: 1.2;
+      background: linear-gradient(135deg, #6366f1, #1d1875);
+      color: white;
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .floating-shapes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .shape:nth-child(1) {
+      width: 80px;
+      height: 80px;
+      top: 15%;
+      left: 20%;
+      animation-delay: 0s;
+    }
+
+    .shape:nth-child(2) {
+      width: 120px;
+      height: 120px;
+      top: 60%;
+      left: 10%;
+      animation-delay: 2s;
+    }
+
+    .shape:nth-child(3) {
+      width: 60px;
+      height: 60px;
+      top: 30%;
+      right: 15%;
+      animation-delay: 4s;
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-20px) rotate(10deg);
+      }
+    }
+
+    .desktop-logo {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .desktop-logo .logo {
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .desktop-logo .logo img {
+      width: 60%;
+      height: 100%;
+    }
+
+    .desktop-logo h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .desktop-logo p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .welcome-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .welcome-content h2 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    .welcome-content p {
+      font-size: 16px;
+      opacity: 0.9;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .feature:hover {
+      transform: translateX(10px);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .feature i {
+      font-size: 20px;
+      color: #06d6a0;
+    }
+
+    .feature span {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    /* Right Panel - Common */
+    .login-right {
+      flex: 1;
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: linear-gradient(145deg, rgba(20, 20, 25, 0.95), rgba(40, 40, 50, 0.9), rgba(15, 15, 20, 0.95));
+    }
+
+    .login-right::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .login-right::-webkit-scrollbar-track {
+      background: #334155;
+      border-radius: 10px;
+    }
+
+    .login-right::-webkit-scrollbar-thumb {
+      background: #6366f1;
+      border-radius: 10px;
+    }
+
+    /* Mobile Logo - Hidden on Desktop */
+    .mobile-logo {
+      display: none;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .mobile-logo .logo {
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+    }
+
+    .mobile-logo .logo img {
+      width: 85%;
+      height: 100%;
+    }
+
+    .mobile-logo h1 {
+      font-size: 26px;
+      color: #f1f5f9;
+      margin-bottom: 5px;
+    }
+
+    .mobile-logo p {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    .login-header {
+      text-align: center;
+    }
+
+    .login-header h2 {
+      font-size: 30px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 8px;
+    }
+
+    .login-header p {
+      color: #94a3b8;
+      font-size: 15px;
+    }
+
+    .alert-container {
+      margin-bottom: 25px;
+    }
+
+    .alert {
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideIn 0.5s ease-out;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .alert-success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10b981;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+    }
+
+    .alert i {
+      font-size: 22px;
+    }
+
+    .alert-close {
+      margin-left: auto;
+      cursor: pointer;
+      font-size: 18px;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+
+    .alert-close:hover {
+      opacity: 1;
+    }
+
+    .form-container {
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #f1f5f9;
+      font-size: 15px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 11px 50px 12px 18px;
+      border-radius: 12px;
+      border: 2px solid #334155;
+      font-size: 15px;
+      transition: all 0.3s;
+      background: #151618;
+      color: #f1f5f9;
+    }
+
+    .form-control::placeholder {
+      color: #94a3b8;
+    }
+
+    .form-control:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      outline: none;
+      background-color: #E8F0FE;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 18px;
+    }
+
+    .password-toggle {
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .password-toggle:hover {
+      color: #6366f1;
+    }
+
+    .login-btn {
+      background: linear-gradient(to right, #6366f1, #4f46e5);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      width: 100%;
+      margin-top: 10px;
+      transition: all 0.3s;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 28px 0;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #334155;
+    }
+
+    .divider-text {
+      padding: 0 15px;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .social-login {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .social-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 12px;
+      border: 2px solid #334155;
+      background: #151618;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-weight: 500;
+      transition: all 0.3s;
+      cursor: pointer;
+      color: #f1f5f9;
+      font-size: 14px;
+    }
+
+    .social-btn i {
+      font-size: 22px;
+    }
+
+    .social-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .social-btn.google i {
+      color: #db4437;
+    }
+
+    .social-btn.google:hover {
+      border-color: #db4437;
+      color: #db4437;
+    }
+
+    .social-btn.github i {
+      color: #94a3b8;
+    }
+
+    .social-btn.github:hover {
+      border-color: #94a3b8;
+      color: #94a3b8;
+    }
+
+    .social-btn.linkedin i {
+      color: #0077b5;
+    }
+
+    .social-btn.linkedin:hover {
+      border-color: #0077b5;
+      color: #0077b5;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    .links a {
+      color: #818cf8;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+      display: inline-block;
+      margin: 0 12px;
+      font-size: 14px;
+    }
+
+    .links a:hover {
+      color: #6366f1;
+    }
+
+    /* ===== RESPONSIVE DESIGN ===== */
+
+    /* Large Tablets (768px - 1024px) */
+    @media (max-width: 1024px) {
+      .login-container {
+        max-width: 900px;
+        height: 90vh;
+      }
+
+      .login-left,
+      .login-right {
+        padding: 40px 30px;
+      }
+
+      .welcome-content h2 {
+        font-size: 32px;
+      }
+
+      .desktop-logo h1 {
+        font-size: 28px;
+      }
+    }
+
+    /* Tablets (768px and below) */
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+        background: #000000;
+      }
+
+      .login-container {
+        height: auto;
+        min-height: 100vh;
+        max-height: none;
+        flex-direction: column;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .login-left {
+        display: none;
+      }
+
+      .login-right {
+        padding: 40px 30px;
+        width: 100%;
+        overflow-y: visible;
+      }
+
+      .mobile-logo {
+        display: block;
+        margin-bottom: 0px;
+      }
+
+      .login-header {
+        margin-bottom: 30px;
+      }
+
+      .login-header h2 {
+        font-size: 28px;
+      }
+
+      .social-login {
+        flex-direction: row;
+      }
+
+      .social-btn i {
+        font-size: 18px;
+      }
+
+      .social-btn {
+        padding: 15px;
+      }
+    }
+
+    /* Mobile Phones (480px and below) */
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      .login-right {
+        padding: 30px 20px;
+      }
+
+      .mobile-logo h1 {
+        font-size: 24px;
+      }
+
+      .login-header h2 {
+        font-size: 26px;
+      }
+
+      .login-header p {
+        font-size: 14px;
+      }
+
+      .form-control {
+        padding: 14px 45px 14px 14px;
+        font-size: 14px;
+      }
+
+      .input-icon {
+        font-size: 16px;
+        right: 14px;
+      }
+
+      .login-btn {
+        padding: 15px;
+        font-size: 15px;
+      }
+
+      .social-btn {
+        padding: 14px;
+        font-size: 13px;
+      }
+
+      .links a {
+        font-size: 13px;
+        margin: 0 8px;
+      }
+    }
+
+    /* Small Mobile Phones (360px and below) */
+    @media (max-width: 360px) {
+      .login-right {
+        padding: 25px 15px;
+      }
+
+      .mobile-logo h1 {
+        font-size: 22px;
+      }
+
+      .login-header h2 {
+        font-size: 24px;
+      }
+
+      .links a {
+        display: block;
+        margin: 8px 0;
+      }
+
+      .form-control {
+        padding: 12px 40px 12px 12px;
+      }
+    }
+
+    /* Height-based adjustments */
+    @media (max-height: 700px) and (min-width: 769px) {
+      .login-container {
+        height: 98vh;
+        max-height: none;
+      }
+
+      .login-left,
+      .login-right {
+        padding: 30px 25px;
+      }
+
+      .desktop-logo {
+        margin-bottom: 25px;
+      }
+
+      .welcome-content h2 {
+        font-size: 28px;
+        margin-bottom: 15px;
+      }
+
+      .features {
+        margin-top: 20px;
+        gap: 10px;
+      }
+
+      .feature {
+        padding: 12px 15px;
+      }
+    }
+
+    @media (max-height: 600px) and (max-width: 768px) {
+      .login-right {
+        padding: 25px 20px;
+      }
+
+      .mobile-logo {
+        margin-bottom: 20px;
+      }
+
+      .login-header {
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <!-- Left Panel - Desktop Only -->
+    <div class="login-left">
+      <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+      </div>
+
+      <div class="desktop-logo">
+        <div class="logo">
+          <img src="{% static 'core/images/GyaniCode_white_logo.png' %}" alt="GyaniCode Logo">
+        </div>
+      </div>
+
+      <div class="welcome-content">
+        <h2>Unlock Your Learning Journey</h2>
+        <p>Access world-class courses, connect with expert instructors, and transform your career with our comprehensive
+          learning platform.</p>
+
+        <div class="features">
+          <div class="feature">
+            <i class="fas fa-rocket"></i>
+            <span>Personalized Learning Paths</span>
+          </div>
+          <div class="feature">
+            <i class="fas fa-chart-line"></i>
+            <span>Real-time Progress Tracking</span>
+          </div>
+          <div class="feature">
+            <i class="fas fa-users"></i>
+            <span>Expert Mentorship & Support</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel - Common for all devices -->
+    <div class="login-right">
+      <!-- Mobile Logo - Only visible on mobile -->
+      <div class="mobile-logo">
+        <div class="logo">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%236366f1' width='100' height='100'/%3E%3Ctext x='50' y='50' font-size='40' fill='white' text-anchor='middle' dy='.3em' font-weight='bold'%3EGC%3C/text%3E%3C/svg%3E" alt="GyaniCode Logo">
+        </div>
+        <p>Your Gateway to Excellence</p>
+      </div>
+
+      <div class="login-header hidden md:block">
+        <h2 id="login-title">Welcome Back</h2>
+        <p id="login-subtitle">Sign in to continue your learning journey</p>
+      </div>
+
+      <!-- Alert Messages -->
+      <div class="alert-container" id="alertContainer">
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+              <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% elif message.tags == 'success' %}check-circle{% else %}info-circle{% endif %}"></i>
+              <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- Regular Login Form -->
+      <div class="form-container" id="regular-login">
+        <form id="loginForm" action="{% url 'login_view' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="">
+
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <div class="input-wrapper">
+              <input type="email" id="email" name="email" class="form-control" required
+                placeholder="Enter your email address">
+              <i class="fas fa-envelope input-icon"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="password" name="password" class="form-control" required
+                placeholder="Enter your password">
+              <i class="fas fa-eye password-toggle input-icon" onclick="togglePassword()"></i>
+            </div>
+          </div>
+
+          <button type="submit" class="login-btn">
+            <i class="fas fa-sign-in-alt"></i> Sign In
+          </button>
+        </form>
+
+        <div class="divider">
+          <span class="divider-text">Or continue with</span>
+        </div>
+
+        <div class="social-login">
+          <a href="#" class="no-underline">
+            <button type="button" class="social-btn google">
+              <i class="fab fa-google"></i> Google
+            </button>
+          </a>
+          <a href="#" class="no-underline">
+            <button type="button" class="social-btn github">
+              <i class="fab fa-github"></i> GitHub
+            </button>
+          </a>
+          <a href="#" class="no-underline">
+            <button type="button" class="social-btn linkedin">
+              <i class="fab fa-linkedin"></i> LinkedIn
+            </button>
+          </a>
+        </div>
+
+        <div class="links">
+          <a href="{% url 'register_view' %}">Create an Account</a>
+          <a href="#">Forgot Password?</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function () {
+      // Check URL parameter to determine login type
+      const urlParams = new URLSearchParams(window.location.search);
+      const isDashboard = urlParams.get('dashboard') === 'true';
+
+      if (isDashboard) {
+        showDashboardLogin();
+      } else {
+        showRegularLogin();
+      }
+
+      // Prevent body scrolling
+      document.body.style.overflow = 'hidden';
+
+      // Auto-remove alerts after 5 seconds
+      setTimeout(() => {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+          alert.remove();
+        });
+      }, 5000);
+    });
+
+    // Toggle password visibility for regular login
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const icon = document.querySelector('#regular-login .password-toggle');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    // Toggle password visibility for dashboard login
+    function toggleDashboardPassword() {
+      const passwordInput = document.getElementById('dashboard_password');
+      const icon = document.querySelector('#dashboard-login .password-toggle');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    // Show regular login form
+    function showRegularLogin() {
+      document.getElementById('regular-login').style.display = 'block';
+      document.getElementById('dashboard-login').style.display = 'none';
+      document.getElementById('login-title').textContent = 'Welcome Back';
+      document.getElementById('login-subtitle').textContent = 'Sign in to continue your learning journey';
+    }
+
+    // Show dashboard login form
+    function showDashboardLogin() {
+      document.getElementById('regular-login').style.display = 'none';
+      document.getElementById('dashboard-login').style.display = 'block';
+      document.getElementById('login-title').textContent = 'Student Dashboard';
+      document.getElementById('login-subtitle').textContent = 'Enter your student credentials';
+    }
+
+    // Social login function
+    function socialLogin(provider) {
+      // In a real implementation, this would redirect to the OAuth provider
+      alert(`Redirecting to ${provider} authentication...`);
+    }
+
+    // Handle window resize
+    window.addEventListener('resize', function () {
+      document.body.style.overflow = 'hidden';
+    });
+  </script>
+</body>
+
+</html>
