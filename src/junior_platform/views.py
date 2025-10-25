@@ -1,51 +1,35 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .services.auth import AuthService
 
 
 def junior_home(request):
     """Home page view"""
-    return render(request, 'core/index.html')
+    return AuthService.handle_home_view(request)
 
 
 def login_view(request):
-    """Login view - handles both GET and POST requests"""
-    if request.method == 'POST':
-        # Process login through service
-        result = AuthService.process_login_request(request)
-        
-        # Add message
-        if result['success']:
-            messages.success(request, result['message'])
-            return redirect(result['redirect_to'])
-        else:
-            messages.error(request, result['message'])
-    
-    return render(request, 'core/auth/login.html')
+    """Login page"""
+    return AuthService.handle_login_view(request)
 
 
 def register_view(request):
-    """Register view - handles both GET and POST requests"""
-    if request.method == 'POST':
-        # Process registration through service
-        result = AuthService.process_registration_request(request)
-        
-        # Add messages
-        if result['success']:
-            messages.success(request, result['message'])
-            return redirect(result['redirect_to'])
-        else:
-            # Display validation errors
-            for field, error_message in result['errors'].items():
-                messages.error(request, f'{field}: {error_message}')
-    
-    return render(request, 'core/auth/register.html')
+    """Register page"""
+    return AuthService.handle_register_view(request)
+
+
+def verify_otp_view(request):
+    return AuthService.handle_verify_otp_view(request)
+
+def resend_otp_view(request):
+    return AuthService.handle_resend_otp_view(request)
 
 
 @login_required
 def dashboard_view(request):
-    """Dashboard view - requires authentication"""
-    return render(request, 'core/dashboard.html')
+    """Dashboard page"""
+    return AuthService.handle_dashboard_view(request)
 
 
+def logout_view(request):
+    """Logout view"""
+    return AuthService.handle_logout_view(request)

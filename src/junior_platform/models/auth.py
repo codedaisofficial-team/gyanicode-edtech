@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import RegexValidator
-
+from django.contrib.auth.models import PermissionsMixin
 
 class UserManager(BaseUserManager):
     """Custom user manager for User model"""
@@ -30,7 +30,10 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class User(AbstractBaseUser):
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+
     """Custom User model for Junior Platform"""
     
     # Basic Information

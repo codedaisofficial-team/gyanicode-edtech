@@ -6,23 +6,93 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Gyanicode - Learn, Grow, Succeed</title>
+    
+    <!-- DNS Prefetch for faster CDN connections -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Preconnect for critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    
+    <!-- Critical CSS - loads first -->
     <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+    
+    <!-- Inline critical CSS for instant render -->
+    <style>
+        body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden}
+        *{box-sizing:border-box}
+    </style>
+    
+    <!-- Defer TailwindCSS - non-blocking -->
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    
+    <!-- Async load Google Fonts -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"></noscript>
+
+    <!-- Async load Font Awesome -->
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
 </head>
 
 <body>
+    <!-- Modern Toast Notifications -->
+    {% if messages %}
+    <div id="toast-container" style="position: fixed; top: 80px; right: 20px; z-index: 9999; max-width: 420px;">
+        {% for message in messages %}
+        <div class="toast-notification {% if message.tags == 'success' %}toast-success{% else %}toast-error{% endif %}" style="animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);">
+            <div style="display: flex; align-items: start; gap: 12px;">
+                <div class="toast-icon {% if message.tags == 'success' %}toast-icon-success{% else %}toast-icon-error{% endif %}">
+                    <i class="fas fa-{% if message.tags == 'success' %}check{% else %}exclamation{% endif %}"></i>
+                </div>
+                <div style="flex: 1;">
+                    <div class="toast-title">{% if message.tags == 'success' %}Success{% else %}Error{% endif %}</div>
+                    <div class="toast-message">{{ message }}</div>
+                </div>
+                <button onclick="this.closest('.toast-notification').style.animation='slideOutRight 0.3s ease-out';setTimeout(()=>this.closest('.toast-notification').remove(),300)" class="toast-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="toast-progress {% if message.tags == 'success' %}toast-progress-success{% else %}toast-progress-error{% endif %}"></div>
+        </div>
+        {% endfor %}
+    </div>
+    <style>
+        .toast-notification{background:#fff;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15);padding:16px;margin-bottom:12px;position:relative;overflow:hidden;border-left:4px solid}
+        .toast-success{border-left-color:#10b981}
+        .toast-error{border-left-color:#ef4444}
+        .toast-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+        .toast-icon-success{background:#d1fae5;color:#10b981}
+        .toast-icon-error{background:#fee2e2;color:#ef4444}
+        .toast-title{font-weight:600;font-size:14px;color:#1f2937;margin-bottom:4px}
+        .toast-message{font-size:13px;color:#6b7280;line-height:1.5}
+        .toast-close{background:transparent;border:none;color:#9ca3af;cursor:pointer;padding:4px;border-radius:4px;transition:all .2s}
+        .toast-close:hover{background:#f3f4f6;color:#1f2937}
+        .toast-progress{position:absolute;bottom:0;left:0;height:3px;width:100%;animation:shrink 5s linear}
+        .toast-progress-success{background:#10b981}
+        .toast-progress-error{background:#ef4444}
+        @keyframes slideInRight{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
+        @keyframes slideOutRight{to{transform:translateX(400px);opacity:0}}
+        @keyframes shrink{from{width:100%}to{width:0}}
+    </style>
+    <script>
+        setTimeout(() => {
+            document.querySelectorAll('.toast-notification').forEach(el => {
+                el.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => el.remove(), 300);
+            });
+        }, 5000);
+    </script>
+    {% endif %}
+
     <!-- Fixed Header  -->
-    <header>
+    <header >
         <div class="top-nav  lg:mx-12">
             <div class="logo-section">Gyanicode</div>
 
@@ -61,16 +131,8 @@
                     </svg>
                     <span>EN</span>
                 </div>
-                <div class="nav-item">
-                    <div>
-                        <div style="font-size: 11px; color: var(--muted);">Hello, sign in</div>
-                        <div style="font-weight: 600;">Account</div>
-                    </div>
-                </div>
-                <div class="nav-item">
-                    <div style="font-size: 11px; color: var(--text);">Returns</div>
-                    <div style="font-weight: 600;">& Orders</div>
-                </div>
+
+                
                 <div class="nav-item cart-icon">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -79,9 +141,44 @@
                     <span>Cart</span>
                     <span class="cart-badge">0</span>
                 </div>
-                <div>
-                    <button class="btn-secondary">Sign In</button>
+                                {% if user.is_authenticated %}
+                <!-- Authenticated User Avatar -->
+                <div class="nav-item" style="position: relative;">
+                    <div style="cursor: pointer; display: flex; align-items: center; gap: 8px;" onclick="toggleUserMenu(event)">
+                        <div class="user-avatar">
+                            {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
+                            <span style="font-size: 16px; font-weight: 600;">{{ user.first_name.0|default:'U'|upper }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- Dark Theme Dropdown -->
+                    <div id="userDropdown" class="user-dropdown-dark" style="display: none;">
+                        <a href="{% url 'dashboard_view' %}" class="dropdown-item-dark">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="#" class="dropdown-item-dark">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                        <div style="margin: 8px 0;">
+                            <a href="{% url 'logout_view' %}" class="btn-logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
+                {% endif %}
+                {% if not user.is_authenticated %}
+                <div>
+                    <a href="{% url 'login_view' %}">
+                        <button class="btn-secondary">Sign In</button>
+                    </a>
+                </div>
+                {% endif %}
             </div>
         </div>
 
@@ -207,7 +304,7 @@
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"
                                 aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16v12H4V6zM8 10l2 2-2 2M14 10l2 2-2 2" />
+                                    d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
 
                             <span>Playground</span>
@@ -812,7 +909,7 @@
                 </div>
 
                 <div class="right">
-                    <img src="{% static 'core/images/hero-section-illustration.png' %}" alt="Learning themed illustration" class="art" />
+                    <img src="{% static 'core/images/hero-section-illustration-2.png' %}" alt="Learning themed illustration" class="art" />
 
                     <div class="card top" role="note" aria-label="Exclusive Community">
                         <div class="row">
@@ -1275,7 +1372,7 @@
                 <div class="grid md:grid-cols-2 gap-12 items-center">
                     <div class="glass-panel p-8 rounded-2xl h-full">
                         <div class="flex justify-center ">
-                            <h1 class="text-4xl font-bold" style="background: var(--btn-grad);
+                            <h1 class="text-4xl font-bold mb-6" style="background: var(--btn-grad);
                             -webkit-background-clip: text;
                             background-clip: text;
                             -webkit-text-fill-color: transparent;
@@ -1480,7 +1577,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid md:grid-cols-2 gap-12">
                     <div>
-                        <!-- <h2 class="text-4xl font-bold mb-6" style="color: #E2E8F0;"></h2> -->
+                        <!-- <h2 class="text-4xl font-bold mb-4" style="color: #E2E8F0;"></h2> -->
                         <div class="flex justify-center">
                             <h1 class="text-4xl font-bold mb-6" style="background: var(--btn-grad);
                         -webkit-background-clip: text;
@@ -2015,7 +2112,128 @@
             </div>
         </footer>
 
-        <script src="{% static 'core/js/main.js' %}"></script>
+        <!-- User Avatar & Dropdown Styles -->
+        <style>
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #dd9552 0%, #ec4899 50%, #8b5cf6 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 2px solid rgba(139, 92, 246, 0.3);
+            }
+            
+            .user-avatar:hover {
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+                border-color: rgba(139, 92, 246, 0.6);
+            }
+            
+            .user-dropdown-dark {
+                display: none;
+                position: absolute;
+                top: calc(100% + 12px);
+                right: 0;
+                background: rgba(30, 30, 40, 0.98);
+                backdrop-filter: blur(10px);
+                border-radius: 12px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(139, 92, 246, 0.2);
+                min-width: 200px;
+                z-index: 1000;
+                padding: 8px;
+                animation: dropdownFadeIn 0.2s ease-out;
+            }
+            
+            @keyframes dropdownFadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .dropdown-item-dark {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 16px;
+                color: #e5e7eb;
+                text-decoration: none;
+                border-radius: 8px;
+                transition: all 0.2s ease;
+                font-size: 14px;
+            }
+            
+            .dropdown-item-dark:hover {
+                background: rgba(139, 92, 246, 0.15);
+                color: #fff;
+                transform: translateX(4px);
+            }
+            
+            .dropdown-item-dark i {
+                width: 18px;
+                font-size: 16px;
+                color: #8b5cf6;
+            }
+            
+            .btn-logout {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 10px 16px;
+                background: linear-gradient(135deg, #dd9552 0%, #ec4899 50%, #8b5cf6 100%);
+                color: #fff;
+                text-decoration: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                width: 100%;
+            }
+            
+            .btn-logout:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+            }
+            
+            .btn-logout i {
+                font-size: 14px;
+            }
+        </style>
+        
+        <!-- User Dropdown Toggle Script -->
+        <script>
+            function toggleUserMenu(event) {
+                event.stopPropagation(); // Prevent event bubbling
+                const dropdown = document.getElementById('userDropdown');
+                const isVisible = dropdown.style.display === 'block';
+                dropdown.style.display = isVisible ? 'none' : 'block';
+            }
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const dropdown = document.getElementById('userDropdown');
+                const avatarContainer = event.target.closest('.nav-item');
+                
+                // Close if clicking outside and dropdown is visible
+                if (dropdown && !avatarContainer && dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                }
+            });
+        </script>
+        
+        <!-- Lazy load main.js for better performance -->
+        <script src="{% static 'core/js/main.js' %}" defer></script>
 </body>
 
 </html>

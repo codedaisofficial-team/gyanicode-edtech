@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Verify OTP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        .height-100 {
+            height: 100vh
+        }
+
+        .card {
+            width: 400px;
+            border: none;
+            height: 300px;
+            box-shadow: 0px 5px 20px 0px #d2dae3;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center
+        }
+
+        .card h6 {
+            color: red;
+            font-size: 20px
+        }
+
+        .inputs input {
+            width: 40px;
+            height: 40px
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            margin: 0
+        }
+
+        .card-2 {
+            background-color: #fff;
+            padding: 10px;
+            width: 350px;
+            height: 100px;
+            bottom: -50px;
+            left: 20px;
+            position: absolute;
+            border-radius: 5px
+        }
+
+        .card-2 .content {
+            margin-top: 50px
+        }
+
+        .card-2 .content a {
+            color: red
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border: 2px solid red
+        }
+
+        .validate {
+            border-radius: 20px;
+            height: 40px;
+            background-color: red;
+            border: 1px solid red;
+            width: 140px
+        }
+    </style>
+</head>
+
+<body>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} wow bounce mt-2" id="alert_message" role="alert">
+        {% if message.tags == 'success' %}
+        <!-- Success Message with Success Icon -->
+        <i class="fas fa-check-circle text-success fa-2x"></i>
+        {% elif message.tags == 'error' %}
+        <!-- Error Message with Error Icon -->
+        <i class="fas fa-times-circle text-danger fa-2x"></i>
+        {% endif %}
+        {{ message }}
+        <button type="button" id="alertCloseBtn" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+
+    <div class="container height-100 d-flex justify-content-center align-items-center">
+        <div class="position-relative">
+            <div class="card p-2 text-center">
+                <h6>Please enter the one-time password <br> to verify your account</h6>
+                <div> <span>A code has been sent to your email</span> </div>
+                <div> <span>If mail is not sent kindly check your spam folder.</span> </div>
+
+                <form method="post" action="{% url 'verify_otp_view' %}" id="otpForm">
+                    <input type="hidden" name="otp" id="otp_combined">
+                    <input type="hidden" name="email" value="{{ email }}">
+
+                    {% csrf_token %}
+                    <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
+                        <input class="m-2 text-center form-control rounded" type="text" id="first" name="otp_digit_1"
+                            maxlength="1" required />
+                        <input class="m-2 text-center form-control rounded" type="text" id="second" name="otp_digit_2"
+                            maxlength="1" required />
+                        <input class="m-2 text-center form-control rounded" type="text" id="third" name="otp_digit_3"
+                            maxlength="1" required />
+                        <input class="m-2 text-center form-control rounded" type="text" id="fourth" name="otp_digit_4"
+                            maxlength="1" required />
+                        <input class="m-2 text-center form-control rounded" type="text" id="fifth" name="otp_digit_5"
+                            maxlength="1" required />
+                        <input class="m-2 text-center form-control rounded" type="text" id="sixth" name="otp_digit_6"
+                            maxlength="1" required />
+                    </div>
+
+                    <!-- <div class="mt-4">
+                        <button type="submit" class="btn btn-danger px-4 validate">Validate</button>
+                    </div> -->
+                </form>
+                <div class="mt-2">
+                    <span id="timer" class="text-muted">Resend OTP in <span id="countdown">120</span>s</span>
+                    <button id="resendBtn" class="btn btn-link p-0" style="display: none;" onclick="resendOtp()">Resend
+                        OTP</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="container height-100 d-flex justify-content-center align-items-center">
+        <div class="position-relative">
+            <div class="card p-2 text-center">
+                <h6>Please enter the one-time password <br> to verify your account</h6>
+                <div> <span>A code has been sent to your email</span> </div>
+                <div> <span>If mail is not sent kindly check your spam folder.</span> </div>
+
+                <form method="post" action="" id="otpForm">
+                    {% csrf_token %}
+                    <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
+                        <input class="m-2 text-center form-control rounded" type="text" id="first" name="otp_digit_1"
+                            maxlength="1" required />
+                        <input class="m-2 text-center form-control rounded" type="text" id="second" name="otp_digit_2"
+                            maxlength="1" required />
+                        <input class="m-2 text-center form-control rounded" type="text" id="third" name="otp_digit_3"
+                            maxlength="1" required />
+                        <input class="m-2 text-center form-control rounded" type="text" id="fourth" name="otp_digit_4"
+                            maxlength="1" required />
+                        <input class="m-2 text-center form-control rounded" type="text" id="fifth" name="otp_digit_5"
+                            maxlength="1" required />
+                        <input class="m-2 text-center form-control rounded" type="text" id="sixth" name="otp_digit_6"
+                            maxlength="1" required />
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-danger px-4 validate">Validate</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function OTPInput() {
+                const inputs = document.querySelectorAll('#otp > input');
+                for (let i = 0; i < inputs.length; i++) {
+                    inputs[i].addEventListener('input', function () {
+                        if (this.value.length > 1) {
+                            this.value = this.value[0]; //    
+                        }
+                        if (this.value !== '' && i < inputs.length - 1) {
+                            inputs[i + 1].focus(); //   
+                        }
+                    });
+
+                    inputs[i].addEventListener('keydown', function (event) {
+                        if (event.key === 'Backspace') {
+                            this.value = '';
+                            if (i > 0) {
+                                inputs[i - 1].focus();
+                            }
+                        }
+                    });
+                }
+            }
+            OTPInput();
+        });
+    </script>
+    <script>
+
+        // === Auto-move focus ===
+        const inputs = document.querySelectorAll('#otp input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', () => {
+                if (input.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+                // Auto-submit when all are filled
+                if (Array.from(inputs).every(i => i.value.length === 1)) {
+                    document.getElementById('otpForm').submit();
+                }
+            });
+        });
+
+        // === Countdown Timer ===
+        let countdown = 120;
+        const timerSpan = document.getElementById('countdown');
+        const resendBtn = document.getElementById('resendBtn');
+
+        const interval = setInterval(() => {
+            countdown--;
+            timerSpan.innerText = countdown;
+            if (countdown <= 0) {
+                clearInterval(interval);
+                document.getElementById('timer').style.display = 'none';
+                resendBtn.style.display = 'inline';
+            }
+        }, 1000);
+
+        // === Resend OTP Function ===
+        function resendOtp() {
+            fetch("{% url 'resend_otp' %}")  // You'll need to define this view
+                .then(response => {
+                    if (response.ok) {
+                        alert("OTP resent successfully!");
+                        location.reload(); // Refresh the page to restart the timer
+                    } else {
+                        alert("Failed to resend OTP.");
+                    }
+                });
+        }
+
+
+    </script>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const inputs = document.querySelectorAll('#otp input');
+    const otpForm = document.getElementById('otpForm');
+    const otpHidden = document.getElementById('otp_combined');
+
+    inputs.forEach((input, index) => {
+        input.addEventListener('input', () => {
+            if (input.value.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+
+            // Auto-submit when all are filled
+            if (Array.from(inputs).every(i => i.value.length === 1)) {
+                otpHidden.value = Array.from(inputs).map(i => i.value).join('');
+                otpForm.submit();
+            }
+        });
+    });
+});
+</script>
+
+</body>
+
+</html>
